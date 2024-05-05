@@ -1,0 +1,6 @@
+name: Minecraft_wsChat
+version: '${version}'
+main: github.duykhanh09103.minecraft_wschat
+api-version: '1.20'
+authors: [duykhanh09103]
+description: websocket chat in minecraft!
