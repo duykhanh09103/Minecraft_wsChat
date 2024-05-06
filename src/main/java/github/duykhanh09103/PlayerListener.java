@@ -2,6 +2,7 @@ package github.duykhanh09103;
 
 
 //import org.bukkit.Bukkit; unused
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
@@ -13,6 +14,9 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerChat(@NotNull AsyncPlayerChatEvent event) {
         final wsClient client = minecraft_wschat.client;
+        if(client == null){
+           client.reconnect();
+        }
         Player player = event.getPlayer();
         String message = event.getMessage();
         client.send("[minecraft] "+player.getName()+" : "+message);
