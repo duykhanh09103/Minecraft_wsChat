@@ -4,3 +4,8 @@ main: github.duykhanh09103.minecraft_wschat
 api-version: '1.20'
 authors: [duykhanh09103]
 description: websocket chat in minecraft!
+commands:
+  reconnect:
+    description: reconnect the webhook when it disconnect!
+    usage: /<command>
+    permission: minecraft_wschat.reconnect
