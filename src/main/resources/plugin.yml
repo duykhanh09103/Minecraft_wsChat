@@ -9,3 +9,8 @@ commands:
     description: reconnect the webhook when it disconnect!
     usage: /<command>
     permission: minecraft_wschat.reconnect
+permissions:
+  minecraft_wschat.reconnect:
+    description: Allows you to using reconnect command!
+    default: true
+
