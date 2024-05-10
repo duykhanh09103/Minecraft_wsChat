@@ -20,15 +20,16 @@ public final class minecraft_wschat extends JavaPlugin {
             client = new wsClient(new URI(config.getString("Uri"))) {
             };
             client.connect();
+
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     public void onDisable() {
         if(client != null&&client.isOpen()){
+            client.send("Server stopped!");
             client.close();
         }
     }
