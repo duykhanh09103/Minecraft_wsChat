@@ -1,5 +1,6 @@
 package github.duykhanh09103;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,13 +18,17 @@ public final class minecraft_wschat extends JavaPlugin {
         config.options().copyDefaults(true);
         saveConfig();
         try {
-            client = new wsClient(new URI(config.getString("Uri"))) {
-            };
-            client.connect();
+            client = new wsClient(new URI(config.getString("Uri")));
+            client.setConnectionLostTimeout(30);
+            client.connectBlocking();
 
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | InterruptedException e) {
             e.printStackTrace();
         }
+        Bukkit.getScheduler().runTaskLater(this,() ->{
+            if(client != null&&client.isOpen()){
+            client.send("Server is on!");}
+        },100L);
     }
 
     @Override

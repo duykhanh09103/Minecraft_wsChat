@@ -13,13 +13,13 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.jetbrains.annotations.NotNull;
 
-public class wsClient extends WebSocketClient {
+public class wsClient  extends WebSocketClient  {
     public wsClient(URI serverUri) {
         super(serverUri);
     }
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        send("Server is on!");
+        //send("Server is on!"); no longer need
         Bukkit.getServer().getLogger().info("[Minecraft_wsChat] Connection to websocket server success!");
 
     }
@@ -38,5 +38,4 @@ public class wsClient extends WebSocketClient {
     public void onError(@NotNull Exception ex) {
         ex.printStackTrace();
     }
-
 }
