@@ -19,7 +19,6 @@ public class wsClient  extends WebSocketClient  {
     }
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        //send("Server is on!"); no longer need
         Bukkit.getServer().getLogger().info("[Minecraft_wsChat] Connection to websocket server success!");
 
     }
