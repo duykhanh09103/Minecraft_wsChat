@@ -22,13 +22,10 @@ public class PlayerListener implements Listener {
         this.plugin = plugin;
     }
 
-    // initialize ws client
-    final wsClient client = minecraft_wschat.client;
-
     //send ws on player chat
     @EventHandler
     public void onPlayerChat(@NotNull AsyncPlayerChatEvent event) {
-
+        final wsClient client = minecraft_wschat.client;
         FileConfiguration  config = plugin.getConfig();
         boolean enable = config.getBoolean("ListenOnPlayerChat");
         if(client != null&&client.isOpen()&&enable) {
@@ -41,21 +38,23 @@ public class PlayerListener implements Listener {
     //send ws on player join
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
+        final wsClient client = minecraft_wschat.client;
       FileConfiguration config = plugin.getConfig();
       boolean enable = config.getBoolean("ListenOnPlayerJoin");
         if(client != null&&client.isOpen()&&enable){
             Player player = event.getPlayer();
-            client.send("[minecraft] "+player.getName()+"has joined the game");
+            client.send("[minecraft] "+player.getName()+" has joined the game");
         }
     }
     //send ws on player leave
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
+        final wsClient client = minecraft_wschat.client;
         FileConfiguration config = plugin.getConfig();
         boolean enable = config.getBoolean("ListenOnPlayerQuit");
         if(client != null&&client.isOpen()&&enable){
             Player player = event.getPlayer();
-            client.send("[minecraft] "+player.getName()+"has left the game");
+            client.send("[minecraft] "+player.getName()+" has left the game");
         }
     }
 

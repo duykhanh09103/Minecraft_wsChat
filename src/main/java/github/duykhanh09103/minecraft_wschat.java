@@ -31,12 +31,12 @@ public final class minecraft_wschat extends JavaPlugin {
             } catch (URISyntaxException | InterruptedException e) {
                 e.printStackTrace();
             }
-            //delay send ws by sending 5s after server run
+            //delay send ws by sending 1s after server run
             Bukkit.getScheduler().runTaskLater(this, () -> {
                 if (client != null && client.isOpen()) {
                     client.send("Server is on!");
                 }
-            }, 100L);
+            }, 20L);
         }
         if(!config.getBoolean("enable")){
             getLogger().info("config is set to not enable! Shutting down plugin...");
