@@ -28,7 +28,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+          token: ${{ secrets.github_token }}
           body: |
             Changes in this release:
             ${{ github.event.head_commit.message }}
