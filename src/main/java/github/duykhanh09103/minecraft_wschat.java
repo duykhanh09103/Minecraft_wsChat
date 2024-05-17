@@ -38,7 +38,7 @@ public final class minecraft_wschat extends JavaPlugin {
             }, 100L);
         }
         if(!config.getBoolean("enable")){
-            getLogger().info("[Minecraft_wsChat] config is set to not enable! Shutting down plugin...");
+            getLogger().info("config is set to not enable! Shutting down plugin...");
             Bukkit.getPluginManager().disablePlugin(this);
         }
     }
