@@ -12,9 +12,12 @@ public final class minecraft_wschat extends JavaPlugin {
     FileConfiguration config = getConfig();
     @Override
     public void onEnable() {
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getCommand("reconnect").setExecutor(new wsClientReconnect());
         config.addDefault("Uri", "ws://localhost:8080");
+        config.addDefault("ListenOnPlayerChat", true);
+        config.addDefault("ListenOnPlayerJoin", true);
+        config.addDefault("ListenOnPlayerQuit", true);
         config.options().copyDefaults(true);
         saveConfig();
         try {
@@ -25,18 +28,18 @@ public final class minecraft_wschat extends JavaPlugin {
         } catch (URISyntaxException | InterruptedException e) {
             e.printStackTrace();
         }
-        Bukkit.getScheduler().runTaskLater(this,() ->{
-            if(client != null&&client.isOpen()){
-            client.send("Server is on!");}
-        },100L);
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            if (client != null && client.isOpen()) {
+                client.send("Server is on!");
+            }
+        }, 100L);
     }
 
     @Override
     public void onDisable() {
-        if(client != null&&client.isOpen()){
+        if (client != null && client.isOpen()) {
             client.send("Server stopped!");
             client.close();
         }
     }
-
 }
