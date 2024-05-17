@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 public final class minecraft_wschat extends JavaPlugin {
     public static wsClient client;
@@ -15,24 +16,31 @@ public final class minecraft_wschat extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getCommand("reconnect").setExecutor(new wsClientReconnect());
         config.addDefault("Uri", "ws://localhost:8080");
+        config.addDefault("enable",true);
         config.addDefault("ListenOnPlayerChat", true);
         config.addDefault("ListenOnPlayerJoin", true);
         config.addDefault("ListenOnPlayerQuit", true);
         config.options().copyDefaults(true);
         saveConfig();
-        try {
-            client = new wsClient(new URI(config.getString("Uri")));
-            client.setConnectionLostTimeout(30);
-            client.connectBlocking();
+        if (config.getBoolean("enable")) {
+            try {
+                client = new wsClient(new URI(Objects.requireNonNull(config.getString("Uri"))));
+                client.setConnectionLostTimeout(30);
+                client.connectBlocking();
 
-        } catch (URISyntaxException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        Bukkit.getScheduler().runTaskLater(this, () -> {
-            if (client != null && client.isOpen()) {
-                client.send("Server is on!");
+            } catch (URISyntaxException | InterruptedException e) {
+                e.printStackTrace();
             }
-        }, 100L);
+            Bukkit.getScheduler().runTaskLater(this, () -> {
+                if (client != null && client.isOpen()) {
+                    client.send("Server is on!");
+                }
+            }, 100L);
+        }
+        if(!config.getBoolean("enable")){
+            getLogger().info("[Minecraft_wsChat] config is set to not enable! Shutting down plugin...");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
     }
 
     @Override
