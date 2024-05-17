@@ -31,12 +31,11 @@ public class PlayerListener implements Listener {
 
         FileConfiguration  config = plugin.getConfig();
         boolean enable = config.getBoolean("ListenOnPlayerChat");
-        if(client != null&&client.isOpen()&&enable){
+        if(client != null&&client.isOpen()&&enable) {
             Player player = event.getPlayer();
             String message = event.getMessage();
-            client.send("[minecraft] "+player.getName()+" : "+message);
+            client.send("[minecraft] " + player.getName() + " : " + message);
         }
-        //Bukkit.broadcastMessage("[facebook]"+player.getName()+message);
 
     }
     //send ws on player join
