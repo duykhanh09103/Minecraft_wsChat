@@ -16,30 +16,32 @@ public final class minecraft_wschat extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getCommand("reconnect").setExecutor(new wsClientReconnect());
         config.addDefault("Uri", "ws://localhost:8080");
-        config.addDefault("enable",true);
-        config.addDefault("ListenOnPlayerChat", true);
-        config.addDefault("ListenOnPlayerJoin", true);
-        config.addDefault("ListenOnPlayerQuit", true);
+        config.addDefault("listen.enable",false);
+        config.addDefault("listen.onPlayerChat", true);
+        config.addDefault("listen.onPlayerJoin", true);
+        config.addDefault("listen.onPlayerQuit", true);
+        config.addDefault("listen.onAdvancementDone",true);
+        config.addDefault("listen.onPlayerDeath",true);
         config.options().copyDefaults(true);
         saveConfig();
-        if (config.getBoolean("enable")) {
+        if (config.getBoolean("listen.enable")) {
             try {
                 client = new wsClient(new URI(Objects.requireNonNull(config.getString("Uri"))));
-                client.setConnectionLostTimeout(30);
+                client.setConnectionLostTimeout(5);
                 client.connectBlocking();
 
             } catch (URISyntaxException | InterruptedException e) {
                 e.printStackTrace();
             }
-            //delay send ws by sending 1s after server run
             Bukkit.getScheduler().runTaskLater(this, () -> {
                 if (client != null && client.isOpen()) {
                     client.send("Server is on!");
                 }
             }, 20L);
         }
-        if(!config.getBoolean("enable")){
+        if(!config.getBoolean("listen.enable")){
             getLogger().info("config is set to not enable! Shutting down plugin...");
+            getLogger().info("if this is your first time running the plugin, consider setup in config.yml");
             Bukkit.getPluginManager().disablePlugin(this);
         }
     }

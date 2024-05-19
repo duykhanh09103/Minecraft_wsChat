@@ -4,14 +4,20 @@ package github.duykhanh09103;
 //import org.bukkit.Bukkit; unused
 import org.bukkit.Bukkit;
 
+import org.bukkit.advancement.Advancement;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.util.Objects;
 //import org.bukkit.plugin.java.JavaPlugin; unused
 
 public class PlayerListener implements Listener {
@@ -27,7 +33,7 @@ public class PlayerListener implements Listener {
     public void onPlayerChat(@NotNull AsyncPlayerChatEvent event) {
         final wsClient client = minecraft_wschat.client;
         FileConfiguration  config = plugin.getConfig();
-        boolean enable = config.getBoolean("ListenOnPlayerChat");
+        boolean enable = config.getBoolean("listen.onPlayerChat");
         if(client != null&&client.isOpen()&&enable) {
             Player player = event.getPlayer();
             String message = event.getMessage();
@@ -40,7 +46,7 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event){
         final wsClient client = minecraft_wschat.client;
       FileConfiguration config = plugin.getConfig();
-      boolean enable = config.getBoolean("ListenOnPlayerJoin");
+      boolean enable = config.getBoolean("listen.onPlayerJoin");
         if(client != null&&client.isOpen()&&enable){
             Player player = event.getPlayer();
             client.send("[minecraft] "+player.getName()+" has joined the game");
@@ -51,12 +57,46 @@ public class PlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event){
         final wsClient client = minecraft_wschat.client;
         FileConfiguration config = plugin.getConfig();
-        boolean enable = config.getBoolean("ListenOnPlayerQuit");
+        boolean enable = config.getBoolean("listen.onPlayerQuit");
         if(client != null&&client.isOpen()&&enable){
             Player player = event.getPlayer();
             client.send("[minecraft] "+player.getName()+" has left the game");
         }
     }
+    //send ws when player complete advancement
+    @EventHandler
+    public void onPlayerAdvancementDone( PlayerAdvancementDoneEvent event){
+        Player player = event.getPlayer();
+        Advancement advancement = event.getAdvancement();
+        final wsClient client = minecraft_wschat.client;
+        FileConfiguration config = plugin.getConfig();
+        boolean enable = config.getBoolean("listen.onAdvancementDone");
+        var advancementtypemessage=switch(Objects.requireNonNull(advancement.getDisplay()).getType().toString().toUpperCase()){
+            default ->  "Had reach something i dont fucking know" ;
+            case "CHALLENGE" -> "has complete a challenge";
+            case "GOAL" -> "has reached the goal";
+            case "TASK" -> "has made the advancement";
+        };
+        if( advancement.getKey().toString().contains("minecraft/recipe")) {
+            return;
+        }
+        else if(client!= null&&client.isOpen()&&enable&& !Objects.requireNonNull(advancement.getDisplay()).isHidden()){
+         client.send("[minecraft] "+player.getName()+" "+advancementtypemessage+" "+ advancement.getDisplay().getTitle() );
+        }
+
+    }
+
+    //send ws on player dead
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event){
+        final wsClient client = minecraft_wschat.client;
+        FileConfiguration config = plugin.getConfig();
+        boolean enable = config.getBoolean("listen.onPlayerDeath");
+        if(client != null&&client.isOpen()&&enable){
+            client.send("[minecraft] "+event.getDeathMessage());
+        }
+    }
+
 
 }
 
