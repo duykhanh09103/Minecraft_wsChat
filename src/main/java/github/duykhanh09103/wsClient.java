@@ -9,7 +9,6 @@ import org.bukkit.ChatColor;
 
 import org.java_websocket.client.WebSocketClient;
 //import org.java_websocket.drafts.Draft;  unused
-//import org.java_websocket.drafts.Draft_6455;  unused
 import org.java_websocket.handshake.ServerHandshake;
 import org.jetbrains.annotations.NotNull;
 
