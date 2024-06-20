@@ -3,6 +3,8 @@ package github.duykhanh09103;
 
 //import org.bukkit.Bukkit; unused
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -14,8 +16,8 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.Objects;
 //import org.bukkit.plugin.java.JavaPlugin; unused
 
@@ -26,7 +28,6 @@ public class PlayerListener implements Listener {
     public PlayerListener(minecraft_wschat plugin) {
         this.plugin = plugin;
     }
-
     //send ws on player chat
     @EventHandler
     public void onPlayerChat(@NotNull AsyncPlayerChatEvent event) {
@@ -46,9 +47,17 @@ public class PlayerListener implements Listener {
         final wsClient client = minecraft_wschat.client;
       FileConfiguration config = plugin.getConfig();
       boolean enable = config.getBoolean("listen.onPlayerJoin");
+        Player player = event.getPlayer();
         if(client != null&&client.isOpen()&&enable){
-            Player player = event.getPlayer();
+
             client.send("[minecraft] "+player.getName()+" has joined the game");
+        }
+        boolean statusInTab = config.getBoolean("statusInTab");
+        if(statusInTab){
+            if (!client.isOpen()){
+                player.setPlayerListFooter(ChatColor.translateAlternateColorCodes('&',"&fWebsocket status&r: not initialized!"));
+            }
+            player.setPlayerListFooter(ChatColor.translateAlternateColorCodes('&',"&fWebsocket status&r: &2Connected &r"));
         }
     }
     //send ws on player leave

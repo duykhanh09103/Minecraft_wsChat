@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public final class minecraft_wschat extends JavaPlugin {
     public static wsClient client;
@@ -16,6 +17,7 @@ public final class minecraft_wschat extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getCommand("reconnect").setExecutor(new wsClientReconnect());
         config.addDefault("Uri", "ws://localhost:8080");
+        config.addDefault("statusInTab",true);
         config.addDefault("listen.enable",false);
         config.addDefault("listen.onPlayerChat", true);
         config.addDefault("listen.onPlayerJoin", true);
