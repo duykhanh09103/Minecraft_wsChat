@@ -1,9 +1,12 @@
 package github.duykhanh09103;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
@@ -12,8 +15,13 @@ import java.util.concurrent.TimeUnit;
 public final class minecraft_wschat extends JavaPlugin {
     public static wsClient client;
     FileConfiguration config = getConfig();
+    private File messageFile = new File(getDataFolder(),"messages.yml");
+    private FileConfiguration messagesConfig = YamlConfiguration.loadConfiguration(messageFile);
     @Override
     public void onEnable() {
+        if(!messageFile.exists()){
+            saveResource("messages.yml",false);
+        };
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getCommand("reconnect").setExecutor(new wsClientReconnect());
         config.addDefault("Uri", "ws://localhost:8080");
@@ -24,6 +32,7 @@ public final class minecraft_wschat extends JavaPlugin {
         config.addDefault("listen.onPlayerQuit", true);
         config.addDefault("listen.onAdvancementDone",true);
         config.addDefault("listen.onPlayerDeath",true);
+        config.addDefault("listen.sendOnServerDisableAndEnable",false);
         config.options().copyDefaults(true);
         saveConfig();
         if (config.getBoolean("listen.enable")) {
@@ -35,11 +44,19 @@ public final class minecraft_wschat extends JavaPlugin {
             } catch (URISyntaxException | InterruptedException e) {
                 e.printStackTrace();
             }
+            if(config.getBoolean("listen.sendOnServerDisableAndEnable")){
             Bukkit.getScheduler().runTaskLater(this, () -> {
                 if (client != null && client.isOpen()) {
-                    client.send("Server is on!");
+                    String messages = messagesConfig.getString("serverOn");
+                    if(messages == null||messages.isEmpty()) {
+                        Bukkit.getServer().getLogger().info(ChatColor.YELLOW + "[Minecraft_wsChat]: Warning! messages.yaml serverOn event is null! using default message ");
+                        client.send("Server is on!");
+                    }
+                    else{
+                        client.send(messages);
+                    }
                 }
-            }, 20L);
+            }, 20L);}
         }
         if(!config.getBoolean("listen.enable")){
             getLogger().info("config is set to not enable! Shutting down plugin...");
@@ -50,9 +67,21 @@ public final class minecraft_wschat extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if(config.getBoolean("listen.sendOnServerDisableAndEnable")){
         if (client != null && client.isOpen()) {
-            client.send("Server stopped!");
+            String messages = messagesConfig.getString("serverOn");
+            if(messages == null|| messages.isEmpty()){
+                Bukkit.getServer().getLogger().info(ChatColor.YELLOW + "[Minecraft_wsChat]: Warning! messages.yaml serverOff event is null! using default message ");
+                client.send("Server stopped!");
+            }
+            else{
+                client.send(messages);
+            }
             client.close();
         }
+       }
+    }
+    public FileConfiguration getMessagesConfig(){
+        return messagesConfig;
     }
 }

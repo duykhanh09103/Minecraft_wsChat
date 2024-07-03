@@ -1,0 +1,15 @@
+#This will change the message that will be sent to the websocket server.
+#Current support variable: %playerMessage% ,%playerName% , %playerDeathMessage% , %advancementTypeMessage% , %advancementTitle%
+#Keep in mind that only %playerName% variable can be used in every event!
+# %playerDeathMessage% will send entirely player death message includes player name!
+
+onPlayerChat: "[minecraft] %playerName% : %playerMessage%"
+onPlayerJoin: "[minecraft] %playerName% has joined the game!"
+onPlayerQuit: "[minecraft] %playerName% has left the game!"
+onPlayerAdvancementDone: "[minecraft] %playerName% %advancementTypeMessage% %advancementTitle%"
+onPlayerDeath: "[minecraft] %playerDeathMessage%"
+
+
+#[SERVER RELATED (on and off)
+serverOn: "Server is on!"
+serverOff: "Server is off!"
