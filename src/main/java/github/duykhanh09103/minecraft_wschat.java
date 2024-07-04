@@ -33,11 +33,12 @@ public final class minecraft_wschat extends JavaPlugin {
         config.addDefault("listen.onAdvancementDone",true);
         config.addDefault("listen.onPlayerDeath",true);
         config.addDefault("listen.sendOnServerDisableAndEnable",false);
+        config.addDefault("maxRetryAttempt",5);
         config.options().copyDefaults(true);
         saveConfig();
         if (config.getBoolean("listen.enable")) {
             try {
-                client = new wsClient(new URI(Objects.requireNonNull(config.getString("Uri"))));
+                client = new wsClient(new URI(Objects.requireNonNull(config.getString("Uri"))),this);
                 client.setConnectionLostTimeout(5);
                 client.connectBlocking();
 
