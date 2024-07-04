@@ -70,7 +70,7 @@ public final class minecraft_wschat extends JavaPlugin {
     public void onDisable() {
         if(config.getBoolean("listen.sendOnServerDisableAndEnable")){
         if (client != null && client.isOpen()) {
-            String messages = messagesConfig.getString("serverOn");
+            String messages = messagesConfig.getString("serverOff");
             if(messages == null|| messages.isEmpty()){
                 Bukkit.getServer().getLogger().info(ChatColor.YELLOW + "[Minecraft_wsChat]: Warning! messages.yaml serverOff event is null! using default message ");
                 client.send("Server stopped!");
