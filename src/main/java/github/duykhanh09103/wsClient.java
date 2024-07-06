@@ -42,7 +42,9 @@ public class wsClient  extends WebSocketClient  {
     public void onClose(int code, String reason, boolean remote) {
         Bukkit.getServer().getLogger().info("[Minecraft_wsChat] Connection to websocket server closed!");
         changeAllPlayerTablist(null,ChatColor.translateAlternateColorCodes('&',"&fWebsocket status&r: &4Disconnected &r"));
-    tryToReconnect();
+    if(remote){
+        tryToReconnect();
+    }
     }
 
     @Override
