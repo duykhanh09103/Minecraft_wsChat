@@ -107,6 +107,9 @@ public class PlayerListener implements Listener {
         FileConfiguration messagesConfig = plugin.getMessagesConfig();
         boolean enable = config.getBoolean("listen.onAdvancementDone");
         String messages = messagesConfig.getString("onPlayerAdvancementDone");
+        if (advancement.getDisplay() == null) {
+            return;
+        }
         var advancementTypeMessage=switch(Objects.requireNonNull(advancement.getDisplay()).getType().toString().toUpperCase()){
             default ->  "Had reach something i dont fucking know" ;
             case "CHALLENGE" -> "has complete a challenge";
